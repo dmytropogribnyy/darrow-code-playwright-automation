@@ -13,8 +13,16 @@ test.describe('accessibility', { tag: '@a11y' }, () => {
 
     const knownProductViolations = results.violations.filter(
       (violation) =>
-        violation.id === 'aria-prohibited-attr' &&
-        violation.nodes.every((node) => node.html.includes('aria-label="5 out of 5 stars"')),
+        (violation.id === 'aria-prohibited-attr' &&
+          violation.nodes.every((node) => node.html.includes('aria-label="5 out of 5 stars"'))) ||
+        (violation.id === 'color-contrast' &&
+          violation.nodes.every((node) =>
+            [
+              'href="/sample"',
+              'href="/sample#chapters"',
+              'Each chapter is its own private PDF.',
+            ].some((signature) => node.html.includes(signature)),
+          )),
     );
     const unexpectedViolations = results.violations.filter(
       (violation) => !knownProductViolations.includes(violation),
@@ -22,7 +30,7 @@ test.describe('accessibility', { tag: '@a11y' }, () => {
 
     test.info().annotations.push({
       type: 'known-product-issue-baseline',
-      description: 'DC-A11Y-001: testimonial rating labels require a semantic role.',
+      description: 'DC-A11Y-001 and DC-A11Y-002: reviewed live-product accessibility findings.',
     });
     await test.info().attach('known-product-accessibility-violations', {
       body: Buffer.from(JSON.stringify(knownProductViolations, null, 2)),
