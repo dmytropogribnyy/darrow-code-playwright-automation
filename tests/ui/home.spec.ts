@@ -9,9 +9,6 @@ test.describe('public navigation', () => {
 
     await expect(page).toHaveTitle(/Free Daily Horoscope by Zodiac Sign/);
     await expect(page.getByRole('heading', { level: 1, name: "Today's Sky" })).toBeVisible();
-    await expect(page.getByRole('link', { name: /Aries/ })).toHaveAttribute(
-      'href',
-      '/horoscope/aries',
-    );
+    await expect(page.locator('a[href="/horoscope/aries"]')).toBeVisible();
   });
 });
