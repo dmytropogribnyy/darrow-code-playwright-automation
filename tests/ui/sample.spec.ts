@@ -14,11 +14,10 @@ test.describe('public sample experience', { tag: '@ui' }, () => {
   );
 
   test('opens the complete 24-page CORE sample reader', async ({ app }) => {
-    await app.sample.openCoreReader();
-    await app.sampleReader.expectLoaded();
+    const sampleReader = await app.sampleReport.openCoreReader();
 
-    await expect(app.sampleReader.pages).toHaveCount(24);
-    await expect(app.sampleReader.downloadLink).toHaveAttribute(
+    await expect(sampleReader.pages).toHaveCount(24);
+    await expect(sampleReader.downloadLink).toHaveAttribute(
       'href',
       '/samples/darrow-code-core-sample.pdf',
     );

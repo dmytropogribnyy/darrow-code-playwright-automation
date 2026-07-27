@@ -7,7 +7,8 @@
 
 [Live product](https://darrowcode.com/) ·
 [Product engineering showcase](https://github.com/dmytropogribnyy/darrow-code-insight) ·
-[Test strategy](docs/test-strategy.md)
+[Test strategy](docs/test-strategy.md) ·
+[Known product issues](docs/known-product-issues.md)
 
 This repository is a public, production-style automation work sample for Darrow Code. It exercises
 the real deployed product with a deliberately safe test boundary: public UI, public APIs, public
@@ -30,7 +31,7 @@ through—data submission or checkout.
 | API testing                  | Typed `PublicApi` client validates build, sitemap, and PDF contracts                      |
 | Integration testing          | NOAA Kp response intercepted and fulfilled deterministically with `page.route()`          |
 | Mobile                       | Pixel 7 project with responsive visibility and horizontal-overflow guard                  |
-| Accessibility                | axe-core WCAG A/AA scan of the principal page content                                     |
+| Accessibility                | axe-core WCAG A/AA gate with an explicit, evidence-backed known-issue baseline            |
 | Production safety            | Auto fixture fails on same-origin mutating requests against `darrowcode.com`              |
 | CI/CD                        | Fast PR gate, full main/nightly suite, evidence artifacts, dependency automation          |
 
@@ -116,6 +117,8 @@ BASE_URL=https://approved-test-environment.example npm test
 - A typed API client fixture instead of repeated transport and parsing logic in specs.
 - An auto fixture that proves public production journeys remain read-only.
 - Deterministic network fulfillment for the NOAA integration.
+- Popup-aware page-object composition for the sample reader's real new-tab behavior.
+- A narrowly matched accessibility baseline that preserves evidence and rejects new violations.
 - Separate API, desktop, cross-browser, and mobile projects to avoid redundant execution.
 - Retries only in CI and only to collect trace evidence; a flaky first attempt remains visible.
 - TypeScript compilation runs separately because Playwright's transform does not typecheck tests.
@@ -126,6 +129,8 @@ BASE_URL=https://approved-test-environment.example npm test
 - Every push to `main` runs both the fast gate and the complete browser/mobile suite.
 - The complete suite also runs daily to detect live-product or browser-engine drift.
 - GitHub Actions and npm dependencies are reviewed automatically through Dependabot.
+- Dependency updates are grouped and limited to compatible minor/patch releases; majors require
+  deliberate review.
 - The suite is deliberately not sharded yet: at this size, extra runners and report merging add more
   overhead than speed. The project is ready to adopt Playwright blob reports and matrix sharding when
   runtime justifies it.

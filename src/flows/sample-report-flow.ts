@@ -1,19 +1,20 @@
 import { test } from '@playwright/test';
 
 import type { SamplePage } from '../pages/sample-page';
-import type { SampleReaderPage } from '../pages/sample-reader-page';
+import { SampleReaderPage } from '../pages/sample-reader-page';
 
 export class SampleReportFlow {
-  constructor(
-    private readonly samplePage: SamplePage,
-    private readonly sampleReaderPage: SampleReaderPage,
-  ) {}
+  constructor(private readonly samplePage: SamplePage) {}
 
-  async openCoreReader(): Promise<void> {
-    await test.step('Open the complete public CORE sample reader', async () => {
+  async openCoreReader(): Promise<SampleReaderPage> {
+    return await test.step('Open the complete public CORE sample reader', async () => {
       await this.samplePage.open();
-      await this.samplePage.openCoreReader();
-      await this.sampleReaderPage.expectLoaded();
+      const readerPage = await this.samplePage.openCoreReader();
+      const sampleReader = new SampleReaderPage(readerPage);
+
+      await sampleReader.expectLoaded();
+
+      return sampleReader;
     });
   }
 }

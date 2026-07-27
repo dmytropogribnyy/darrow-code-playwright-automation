@@ -12,11 +12,15 @@ export class IntakeDialog {
 
   constructor(page: Page) {
     this.root = page.getByRole('dialog');
-    this.firstNameInput = this.root.getByLabel('First name');
-    this.emailInput = this.root.getByLabel('Email', { exact: true });
-    this.confirmEmailInput = this.root.getByLabel('Confirm email');
-    this.dateOfBirthInput = this.root.getByLabel('Date of birth');
-    this.birthCityInput = this.root.getByLabel('Birth city + country');
+    this.firstNameInput = this.root.getByRole('textbox', { name: 'Your first name' });
+    this.emailInput = this.root.getByRole('textbox', { name: 'you@example.com' });
+    this.confirmEmailInput = this.root.getByRole('textbox', {
+      name: 'Re-type your email',
+    });
+    this.dateOfBirthInput = this.root.locator('input[type="date"]');
+    this.birthCityInput = this.root.getByRole('combobox', {
+      name: 'Start typing your birth city...',
+    });
     this.checkoutButton = this.root.getByRole('button', {
       name: /Unlock My CORE Report/,
     });

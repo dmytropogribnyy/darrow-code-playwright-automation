@@ -29,7 +29,14 @@ export class SamplePage {
     await expect(this.coreReaderLink).toBeVisible();
   }
 
-  async openCoreReader(): Promise<void> {
+  async openCoreReader(): Promise<Page> {
+    const readerPagePromise = this.page.waitForEvent('popup');
+
     await this.coreReaderLink.click();
+
+    const readerPage = await readerPagePromise;
+    await readerPage.waitForLoadState('domcontentloaded');
+
+    return readerPage;
   }
 }

@@ -25,6 +25,8 @@ effects.
   test that attempts `POST`, `PUT`, `PATCH`, or `DELETE`.
 - Built-in Playwright contexts preserve per-test isolation; shared setup uses a local `beforeEach`
   only when every test in a focused group needs the same starting page.
+- Multi-page journeys return a new page object for the popup instead of rebinding the original
+  fixture page.
 
 ## Production safety boundary
 
@@ -50,6 +52,13 @@ Prefer user-visible contracts in this order:
 
 CSS structure, XPath, positional selection, fixed sleeps, and force clicks are rejected by linting
 or review.
+
+## Accessibility baseline
+
+New axe-core WCAG A/AA violations fail CI. A currently known live-product issue is retained through
+a narrowly matched baseline and emitted as a report annotation plus JSON evidence. The baseline
+must match the rule and exact affected markup; entire axe rules are never disabled. See the
+[known-product issue register](known-product-issues.md).
 
 ## CI policy
 
