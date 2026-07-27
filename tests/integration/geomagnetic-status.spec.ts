@@ -2,7 +2,7 @@ import { expect, test } from '../../src/fixtures/test';
 
 const noaaKpEndpoint = 'https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json';
 
-test.describe('external data integration', () => {
+test.describe('external data integration', { tag: '@integration' }, () => {
   test('renders a deterministic geomagnetic status from a mocked NOAA response', async ({
     app,
     page,

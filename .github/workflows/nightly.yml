@@ -1,6 +1,8 @@
-name: Nightly browser suite
+name: Full browser suite
 
 on:
+  push:
+    branches: [main]
   schedule:
     - cron: '37 3 * * *'
   workflow_dispatch:
@@ -18,8 +20,8 @@ jobs:
     timeout-minutes: 25
 
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
           cache: npm
@@ -28,7 +30,7 @@ jobs:
       - run: npm test
       - name: Upload Playwright evidence
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: playwright-nightly-evidence
           path: |

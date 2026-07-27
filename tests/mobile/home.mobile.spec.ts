@@ -1,6 +1,6 @@
 import { expect, test } from '../../src/fixtures/test';
 
-test.describe('mobile storefront', () => {
+test.describe('mobile storefront', { tag: '@mobile' }, () => {
   test('keeps the primary experience visible without horizontal overflow', async ({
     app,
     page,

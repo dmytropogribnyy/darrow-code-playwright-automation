@@ -1,7 +1,7 @@
 # Darrow Code Playwright Automation
 
 [![Quality gate](https://github.com/dmytropogribnyy/darrow-code-playwright-automation/actions/workflows/quality.yml/badge.svg)](https://github.com/dmytropogribnyy/darrow-code-playwright-automation/actions/workflows/quality.yml)
-[![Nightly browser suite](https://github.com/dmytropogribnyy/darrow-code-playwright-automation/actions/workflows/nightly.yml/badge.svg)](https://github.com/dmytropogribnyy/darrow-code-playwright-automation/actions/workflows/nightly.yml)
+[![Full browser suite](https://github.com/dmytropogribnyy/darrow-code-playwright-automation/actions/workflows/nightly.yml/badge.svg)](https://github.com/dmytropogribnyy/darrow-code-playwright-automation/actions/workflows/nightly.yml)
 
 **Playwright + TypeScript quality engineering for a live AI-powered web product.**
 
@@ -22,35 +22,36 @@ through—data submission or checkout.
 
 | Capability                   | Evidence in this repository                                                               |
 | ---------------------------- | ----------------------------------------------------------------------------------------- |
-| Playwright Test + TypeScript | Strict TypeScript, typed fixtures, projects, web-first assertions                         |
-| Page Object Model            | `HomePage` plus reusable `SiteHeader` and `IntakeDialog` component objects                |
+| Playwright Test + TypeScript | Strict TypeScript, typed UI/API fixtures, projects, tags, web-first assertions            |
+| Page Object Model            | Home, horoscope, sample, reader, header, and intake objects with focused responsibilities |
 | Domain flow                  | `CoreIntakeFlow` expresses the customer journey without leaking selectors into tests      |
-| UI smoke                     | Storefront and Daily Horoscope navigation on Chromium, Firefox, and WebKit                |
-| End-to-end                   | Real CORE selection and intake opening, stopped before customer data or checkout          |
-| API testing                  | `APIRequestContext` validates build, sitemap, and PDF contracts                           |
+| UI smoke                     | Storefront, Daily Horoscope, and sample catalog on Chromium, Firefox, and WebKit          |
+| End-to-end                   | CORE intake boundary and complete 24-page public sample-reader journey                    |
+| API testing                  | Typed `PublicApi` client validates build, sitemap, and PDF contracts                      |
 | Integration testing          | NOAA Kp response intercepted and fulfilled deterministically with `page.route()`          |
 | Mobile                       | Pixel 7 project with responsive visibility and horizontal-overflow guard                  |
 | Accessibility                | axe-core WCAG A/AA scan of the principal page content                                     |
-| CI/CD                        | Fast pull-request gate, scheduled full suite, traces, screenshots, videos, HTML and JUnit |
+| Production safety            | Auto fixture fails on same-origin mutating requests against `darrowcode.com`              |
+| CI/CD                        | Fast PR gate, full main/nightly suite, evidence artifacts, dependency automation          |
 
 ## Architecture
 
 ```mermaid
 flowchart TD
-    T["Readable specs"] --> F["Typed fixture: DarrowApp"]
-    F --> P["Page objects"]
-    F --> C["Component objects"]
-    F --> D["Domain flows"]
-    P --> W["Live Darrow Code UI"]
-    C --> W
-    D --> W
-    A["APIRequestContext"] --> E["Public APIs and assets"]
+    T["Readable specs"] --> F["Typed fixtures"]
+    F --> A["DarrowApp"]
+    F --> P["PublicApi"]
+    F --> G["Production safety guard"]
+    A --> O["Pages, components, flows"]
+    O --> W["Live public UI"]
+    G --> W
+    P --> E["Public APIs and assets"]
     M["Route interception"] --> X["Deterministic external data"]
 ```
 
 The structure stays intentionally small. Page and component objects own locators and reusable UI
-behavior; domain flows compose business journeys; test files retain the assertions that explain
-the intended outcome.
+behavior; domain flows compose business journeys; typed fixtures supply only the capabilities each
+suite needs; test files retain the assertions that explain the intended outcome.
 
 ## Test suites
 
@@ -98,7 +99,7 @@ BASE_URL=https://approved-test-environment.example npm test
 | ---------------------------- | ------------------------------------------------- |
 | `npm run quality`            | Typecheck, lint, and verify formatting            |
 | `npm run test:api`           | Public API and asset contracts                    |
-| `npm run test:smoke`         | Fast Chromium release smoke                       |
+| `npm run test:smoke`         | Tagged Chromium release smoke                     |
 | `npm run test:cross-browser` | Critical path on Chromium, Firefox, and WebKit    |
 | `npm run test:e2e`           | CORE customer journey to the safe intake boundary |
 | `npm run test:integration`   | Deterministic external-service integration        |
@@ -111,10 +112,23 @@ BASE_URL=https://approved-test-environment.example npm test
 - User-facing roles, names, and labels instead of DOM structure or XPath.
 - Playwright auto-waiting and retrying assertions instead of fixed delays.
 - A fresh browser context and independent state for every test.
+- Metadata tags (`@smoke`, `@api`, `@e2e`, `@integration`, `@a11y`, `@mobile`) for intentional selection.
+- A typed API client fixture instead of repeated transport and parsing logic in specs.
+- An auto fixture that proves public production journeys remain read-only.
 - Deterministic network fulfillment for the NOAA integration.
 - Separate API, desktop, cross-browser, and mobile projects to avoid redundant execution.
 - Retries only in CI and only to collect trace evidence; a flaky first attempt remains visible.
 - TypeScript compilation runs separately because Playwright's transform does not typecheck tests.
+
+## CI strategy
+
+- Pull requests receive the fast static, API, and Chromium smoke gate.
+- Every push to `main` runs both the fast gate and the complete browser/mobile suite.
+- The complete suite also runs daily to detect live-product or browser-engine drift.
+- GitHub Actions and npm dependencies are reviewed automatically through Dependabot.
+- The suite is deliberately not sharded yet: at this size, extra runners and report merging add more
+  overhead than speed. The project is ready to adopt Playwright blob reports and matrix sharding when
+  runtime justifies it.
 
 ## Production safety
 

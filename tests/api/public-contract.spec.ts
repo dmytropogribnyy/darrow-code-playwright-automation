@@ -1,40 +1,30 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from '../../src/fixtures/api-test';
 
-import { buildInfoSchema } from '../../src/contracts/build-info';
-
-test.describe('public API and static contracts', () => {
-  test('exposes a typed, non-cached build sentinel', async ({ request }) => {
-    const response = await request.get('/api/public/build-info');
+test.describe('public API and static contracts', { tag: '@api' }, () => {
+  test('exposes a typed, non-cached build sentinel', async ({ publicApi }) => {
+    const { response, body } = await publicApi.getBuildInfo();
 
     expect(response.status()).toBe(200);
     expect(response.headers()['cache-control']).toContain('no-store');
-
-    const payload: unknown = await response.json();
-    const buildInfo = buildInfoSchema.parse(payload);
-
-    expect(buildInfo.build_marker).not.toHaveLength(0);
-    expect(buildInfo.anthropic_stream.first_event_timeout_active_ms).toBeGreaterThan(0);
+    expect(body.build_marker).not.toHaveLength(0);
+    expect(body.anthropic_stream.first_event_timeout_active_ms).toBeGreaterThan(0);
   });
 
-  test('publishes a public-only sitemap', async ({ request }) => {
-    const response = await request.get('/sitemap.xml');
+  test('publishes a public-only sitemap', async ({ publicApi }) => {
+    const { response, body } = await publicApi.getSitemap();
 
     expect(response.status()).toBe(200);
     expect(response.headers()['content-type']).toMatch(/xml/);
-
-    const sitemap = await response.text();
-    expect(sitemap).toContain('<loc>https://darrowcode.com/</loc>');
-    expect(sitemap).not.toContain('/admin');
-    expect(sitemap).not.toContain('/result/');
+    expect(body).toContain('<loc>https://darrowcode.com/</loc>');
+    expect(body).not.toContain('/admin');
+    expect(body).not.toContain('/result/');
   });
 
-  test('serves a valid public sample PDF', async ({ request }) => {
-    const response = await request.get('/samples/darrow-code-love-sample.pdf');
+  test('serves a valid public sample PDF', async ({ publicApi }) => {
+    const { response, body } = await publicApi.getSamplePdf('love');
 
     expect(response.status()).toBe(200);
     expect(response.headers()['content-type']).toContain('application/pdf');
-
-    const body = await response.body();
     expect(body.subarray(0, 5).toString()).toBe('%PDF-');
   });
 });

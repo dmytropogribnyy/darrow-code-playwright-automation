@@ -1,6 +1,6 @@
 import { expect, test } from '../../src/fixtures/test';
 
-test.describe('CORE report journey', () => {
+test.describe('CORE report journey', { tag: ['@e2e', '@production-safe'] }, () => {
   test('reaches the intake boundary without checkout or data submission', async ({ app }) => {
     await app.coreIntake.openWithoutSubmittingCustomerData();
 

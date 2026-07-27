@@ -11,11 +11,20 @@ effects.
 | Layer         | Purpose                                                      | Current example                                |
 | ------------- | ------------------------------------------------------------ | ---------------------------------------------- |
 | API contract  | Verify public service and asset boundaries without a browser | Build sentinel, sitemap, sample PDF            |
-| UI smoke      | Prove critical public navigation in every browser engine     | Storefront → Daily Horoscope                   |
+| UI smoke      | Prove critical public navigation in every browser engine     | Horoscope and sample-catalog journeys          |
 | Integration   | Make an external dependency deterministic and observable     | Mocked NOAA Kp response rendered in the header |
-| End to end    | Exercise the real customer journey to its safe boundary      | Select CORE → open intake → stop before submit |
+| End to end    | Exercise real journeys to a safe or public completion point  | CORE intake boundary and 24-page sample reader |
 | Accessibility | Detect common WCAG A/AA issues on the principal content      | axe-core scan of the home page                 |
 | Mobile        | Verify a representative handset layout and overflow guard    | Pixel 7 project                                |
+
+## Fixture model
+
+- `DarrowApp` supplies page objects, component objects, and domain flows to browser tests.
+- `PublicApi` supplies typed public-contract operations to API tests without creating a browser.
+- The auto production-safety fixture records same-origin requests and fails any public production
+  test that attempts `POST`, `PUT`, `PATCH`, or `DELETE`.
+- Built-in Playwright contexts preserve per-test isolation; shared setup uses a local `beforeEach`
+  only when every test in a focused group needs the same starting page.
 
 ## Production safety boundary
 
@@ -44,10 +53,15 @@ or review.
 
 ## CI policy
 
-- Pull requests: typecheck, lint, formatting, API contracts, and Chromium smoke.
-- Main: the same quality gate after merge.
-- Nightly: full browser, mobile, integration, end-to-end, and accessibility suite.
+- Pull requests: typecheck, lint, formatting, API contracts, and tagged Chromium smoke.
+- Main: the fast quality gate plus the full browser, mobile, integration, end-to-end, and
+  accessibility suite.
+- Scheduled: the same full suite runs daily to detect browser-engine or live-product drift.
 - Failure evidence: trace on first retry, screenshot on failure, retained failure video, HTML and
   JUnit reports.
 
 Retries produce diagnostic evidence; they never convert a flaky failure into an accepted result.
+
+The current suite is intentionally too small to benefit from distributed sharding. When execution
+time becomes material, the full workflow can move to a shard matrix with blob reports and a merged
+HTML report without changing test architecture.
