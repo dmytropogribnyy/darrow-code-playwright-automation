@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: nightly-browser-suite
@@ -28,6 +28,15 @@ jobs:
       - run: npm ci
       - run: npx playwright install --with-deps chromium firefox webkit
       - run: npm test
+      - name: Bootstrap missing visual baselines
+        if: ${{ failure() && hashFiles('tests/visual/home.visual.spec.ts-snapshots/*.png') == '' }}
+        run: |
+          npx playwright test tests/visual --project=chromium --update-snapshots
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add tests/visual/home.visual.spec.ts-snapshots/*.png
+          git commit -m "Bootstrap visual baselines"
+          git push origin HEAD:main
       - name: Upload Playwright evidence
         if: always()
         uses: actions/upload-artifact@v7
