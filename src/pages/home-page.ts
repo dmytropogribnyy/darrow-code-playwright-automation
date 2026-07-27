@@ -5,6 +5,12 @@ export class HomePage {
   readonly productSelectorHeading: Locator;
   readonly coreReportCard: Locator;
   readonly continueToIntakeButton: Locator;
+  readonly almanacRegion: Locator;
+  readonly almanacImage: Locator;
+  readonly almanacIntakeButton: Locator;
+  readonly tarotRegion: Locator;
+  readonly tarotImage: Locator;
+  readonly tarotIntakeButton: Locator;
 
   constructor(private readonly page: Page) {
     this.heroHeading = page.getByRole('heading', {
@@ -20,6 +26,22 @@ export class HomePage {
     });
     this.continueToIntakeButton = page.getByRole('button', {
       name: 'Continue to enter your birth data',
+    });
+    this.almanacRegion = page.getByRole('region', {
+      name: 'ALMANAC — your best days, chosen for you',
+    });
+    this.almanacImage = this.almanacRegion.getByRole('img', {
+      name: 'Moon phases and a zodiac wheel over a dawn horizon, with a golden path marking your best dates — Almanac',
+    });
+    this.almanacIntakeButton = this.almanacRegion.getByRole('button', {
+      name: 'Create my almanac $4.99',
+    });
+    this.tarotRegion = page.getByRole('region', { name: 'Tarot Mirror' });
+    this.tarotImage = this.tarotRegion.getByRole('img', {
+      name: 'Three symbolic tarot cards under moon phases and golden celestial geometry.',
+    });
+    this.tarotIntakeButton = this.tarotRegion.getByRole('button', {
+      name: 'Start Tarot Mirror — $3.99',
     });
   }
 
@@ -47,6 +69,18 @@ export class HomePage {
   async openSelectedProductIntake(): Promise<void> {
     await test.step('Open the selected product intake', async () => {
       await this.continueToIntakeButton.click();
+    });
+  }
+
+  async openAlmanacIntake(): Promise<void> {
+    await test.step('Open the Almanac intake', async () => {
+      await this.almanacIntakeButton.click();
+    });
+  }
+
+  async openTarotIntake(): Promise<void> {
+    await test.step('Open the Tarot Mirror intake', async () => {
+      await this.tarotIntakeButton.click();
     });
   }
 }

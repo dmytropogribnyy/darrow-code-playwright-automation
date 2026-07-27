@@ -1,0 +1,13 @@
+[aria-label='Analytics preferences'],
+[aria-label='Notifications alt+T'],
+button[aria-label='Scroll to top'] {
+  display: none !important;
+}
+
+*,
+*::before,
+*::after {
+  animation: none !important;
+  caret-color: transparent !important;
+  transition: none !important;
+}

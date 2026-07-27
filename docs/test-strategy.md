@@ -15,6 +15,7 @@ effects.
 | Integration   | Make an external dependency deterministic and observable     | Mocked NOAA Kp response rendered in the header |
 | End to end    | Exercise real journeys to a safe or public completion point  | CORE intake boundary and 24-page sample reader |
 | Accessibility | Detect common WCAG A/AA issues on the principal content      | axe-core scan of the home page                 |
+| Visual        | Detect unintended high-value component presentation drift    | Almanac and Tarot product cards                |
 | Mobile        | Verify a representative handset layout and overflow guard    | Pixel 7 project                                |
 
 ## Fixture model
@@ -27,6 +28,8 @@ effects.
   only when every test in a focused group needs the same starting page.
 - Multi-page journeys return a new page object for the popup instead of rebinding the original
   fixture page.
+- One typed zodiac dataset feeds 12 independently reported route checks without duplicating test
+  logic.
 
 ## Production safety boundary
 
@@ -59,6 +62,13 @@ New axe-core WCAG A/AA violations fail CI. A currently known live-product issue 
 a narrowly matched baseline and emitted as a report annotation plus JSON evidence. The baseline
 must match the rule and exact affected markup; entire axe rules are never disabled. See the
 [known-product issue register](known-product-issues.md).
+
+## Visual baseline
+
+Visual checks target two product regions rather than a full dynamic page. A fixed 1280×720 viewport,
+light color scheme, loaded web fonts/images, disabled motion, hidden notification overlays, and CSS
+pixel scaling reduce environmental noise. The 1% pixel-ratio tolerance is intentionally narrow:
+copy, layout, imagery, or pricing changes still require review and an explicit baseline update.
 
 ## CI policy
 

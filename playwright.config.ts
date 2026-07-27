@@ -15,6 +15,12 @@ export default defineConfig({
   timeout: 30_000,
   expect: {
     timeout: 7_500,
+    toHaveScreenshot: {
+      animations: 'disabled',
+      caret: 'hide',
+      maxDiffPixelRatio: 0.01,
+      scale: 'css',
+    },
   },
   reporter: isCi
     ? [
