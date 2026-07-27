@@ -1,0 +1,39 @@
+{
+  "name": "darrow-code-playwright-automation",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Production-style Playwright and TypeScript automation for the live Darrow Code product.",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "test": "playwright test",
+    "test:api": "playwright test --project=api",
+    "test:smoke": "playwright test --project=chromium --grep @smoke",
+    "test:e2e": "playwright test tests/e2e --project=chromium",
+    "test:integration": "playwright test tests/integration --project=chromium",
+    "test:a11y": "playwright test tests/accessibility --project=chromium",
+    "test:cross-browser": "playwright test --project=chromium --project=firefox --project=webkit --grep @smoke",
+    "test:mobile": "playwright test --project=mobile-chromium",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint . --max-warnings=0",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "quality": "npm run typecheck && npm run lint && npm run format:check",
+    "report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.12.1",
+    "@eslint/js": "10.0.1",
+    "@playwright/test": "1.62.0",
+    "@types/node": "24.13.3",
+    "eslint": "10.8.0",
+    "eslint-plugin-playwright": "2.11.0",
+    "globals": "17.3.0",
+    "prettier": "3.9.6",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.65.0",
+    "zod": "4.4.3"
+  }
+}
