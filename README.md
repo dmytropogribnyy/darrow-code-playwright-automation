@@ -21,21 +21,22 @@ through—data submission or checkout.
 
 ## What this demonstrates
 
-| Capability                   | Evidence in this repository                                                          |
-| ---------------------------- | ------------------------------------------------------------------------------------ |
-| Playwright Test + TypeScript | Strict TypeScript, typed UI/API fixtures, projects, tags, web-first assertions       |
-| Page Object Model            | Home, horoscope, sample, reader, header, and product-intake objects                  |
-| Domain flow                  | `CoreIntakeFlow` expresses the customer journey without leaking selectors into tests |
-| UI smoke                     | Storefront, Daily Horoscope, and sample catalog on Chromium, Firefox, and WebKit     |
-| End-to-end                   | CORE, Almanac, and Tarot boundaries plus the complete 24-page public sample reader   |
-| Data-driven coverage         | All 12 public zodiac routes validated from one typed source of truth                 |
-| API testing                  | Typed `PublicApi` client validates build, sitemap, and PDF contracts                 |
-| Integration testing          | NOAA Kp response intercepted and fulfilled deterministically with `page.route()`     |
-| Mobile                       | Pixel 7 project with responsive visibility and horizontal-overflow guard             |
-| Accessibility                | axe-core WCAG A/AA gate with an explicit, evidence-backed known-issue baseline       |
-| Visual regression            | Reviewed Almanac and Tarot component snapshots with deterministic rendering controls |
-| Production safety            | Auto fixture fails on same-origin mutating requests against `darrowcode.com`         |
-| CI/CD                        | Fast PR gate, full main/nightly suite, evidence artifacts, dependency automation     |
+| Capability                   | Evidence in this repository                                                           |
+| ---------------------------- | ------------------------------------------------------------------------------------- |
+| Playwright Test + TypeScript | Strict TypeScript, typed UI/API fixtures, projects, tags, web-first assertions        |
+| Page Object Model            | Home, horoscope, sample, reader, header, and product-intake objects                   |
+| Domain flow                  | `CoreIntakeFlow` expresses the customer journey without leaking selectors into tests  |
+| UI smoke                     | Storefront, Daily Horoscope, and sample catalog on Chromium, Firefox, and WebKit      |
+| End-to-end                   | CORE, Almanac, and Tarot boundaries plus the complete 24-page public sample reader    |
+| Data-driven coverage         | All 12 public zodiac routes validated from one typed source of truth                  |
+| API testing                  | Typed `PublicApi` validates build, SEO, security, crawler, sitemap, and PDF contracts |
+| Integration testing          | NOAA Kp response intercepted and fulfilled deterministically with `page.route()`      |
+| Resilience testing           | NOAA outage and stale-cache fallback paths prove graceful degradation                 |
+| Mobile                       | Pixel 7 project with responsive visibility and horizontal-overflow guard              |
+| Accessibility                | axe-core WCAG A/AA gate with an explicit, evidence-backed known-issue baseline        |
+| Visual regression            | Reviewed Almanac and Tarot component snapshots with deterministic rendering controls  |
+| Production safety            | Auto fixture fails on same-origin mutating requests against `darrowcode.com`          |
+| CI/CD                        | Fast PR gate, full main/nightly suite, evidence artifacts, dependency automation      |
 
 ## Architecture
 
@@ -63,6 +64,7 @@ tests/
 ├── api/             public API and static-asset contracts
 ├── ui/              cross-browser critical-path smoke
 ├── integration/     deterministic external-service behavior
+├── resilience/      external-service failure and fallback behavior
 ├── e2e/             safe live customer journey
 ├── accessibility/   automated WCAG checks
 ├── visual/          stable component-level screenshot contracts
@@ -107,6 +109,7 @@ BASE_URL=https://approved-test-environment.example npm test
 | `npm run test:cross-browser` | Critical path on Chromium, Firefox, and WebKit    |
 | `npm run test:e2e`           | CORE customer journey to the safe intake boundary |
 | `npm run test:integration`   | Deterministic external-service integration        |
+| `npm run test:resilience`    | External-service failure and fallback paths       |
 | `npm run test:a11y`          | axe-core accessibility scan                       |
 | `npm run test:visual`        | Stable product-card screenshot comparisons        |
 | `npm run test:mobile`        | Pixel 7 responsive checks                         |
@@ -117,10 +120,12 @@ BASE_URL=https://approved-test-environment.example npm test
 - User-facing roles, names, and labels instead of DOM structure or XPath.
 - Playwright auto-waiting and retrying assertions instead of fixed delays.
 - A fresh browser context and independent state for every test.
-- Metadata tags (`@smoke`, `@api`, `@e2e`, `@integration`, `@a11y`, `@mobile`) for intentional selection.
+- Metadata tags (`@smoke`, `@api`, `@seo`, `@security`, `@e2e`, `@integration`, `@resilience`,
+  `@a11y`, `@visual`, `@mobile`) for intentional selection.
 - A typed API client fixture instead of repeated transport and parsing logic in specs.
 - An auto fixture that proves public production journeys remain read-only.
 - Deterministic network fulfillment for the NOAA integration.
+- Explicit no-cache and stale-cache NOAA failure paths instead of treating only the happy path.
 - Popup-aware page-object composition for the sample reader's real new-tab behavior.
 - A typed 12-sign dataset that produces independently reported forecast-route tests.
 - A narrowly matched accessibility baseline that preserves evidence and rejects new violations.

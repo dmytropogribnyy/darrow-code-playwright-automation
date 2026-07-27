@@ -24,6 +24,6 @@ test.describe('external data integration', { tag: '@integration' }, () => {
     await app.home.open();
 
     await expect.poll(() => requestCount).toBe(1);
-    await expect(page.getByLabel('Geomagnetic Kp index 6, Storm G2')).toBeVisible();
+    await expect(app.header.geomagneticStatusFor(6, 'Storm G2')).toBeVisible();
   });
 });

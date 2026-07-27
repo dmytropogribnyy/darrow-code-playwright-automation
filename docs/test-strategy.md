@@ -10,9 +10,10 @@ effects.
 
 | Layer         | Purpose                                                      | Current example                                |
 | ------------- | ------------------------------------------------------------ | ---------------------------------------------- |
-| API contract  | Verify public service and asset boundaries without a browser | Build sentinel, sitemap, sample PDF            |
+| API contract  | Verify public service and asset boundaries without a browser | Build, SEO/security, robots, sitemap, PDF      |
 | UI smoke      | Prove critical public navigation in every browser engine     | Horoscope and sample-catalog journeys          |
 | Integration   | Make an external dependency deterministic and observable     | Mocked NOAA Kp response rendered in the header |
+| Resilience    | Prove external-service failures degrade safely               | NOAA outage with empty and stale caches        |
 | End to end    | Exercise real journeys to a safe or public completion point  | CORE intake boundary and 24-page sample reader |
 | Accessibility | Detect common WCAG A/AA issues on the principal content      | axe-core scan of the home page                 |
 | Visual        | Detect unintended high-value component presentation drift    | Almanac and Tarot product cards                |

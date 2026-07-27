@@ -31,6 +31,24 @@ export class PublicApi {
     };
   }
 
+  async getHomePage(): Promise<JsonContract<string>> {
+    const response = await this.request.get('/');
+
+    return {
+      response,
+      body: await response.text(),
+    };
+  }
+
+  async getRobots(): Promise<JsonContract<string>> {
+    const response = await this.request.get('/robots.txt');
+
+    return {
+      response,
+      body: await response.text(),
+    };
+  }
+
   async getSamplePdf(sample: PublicSample): Promise<JsonContract<Buffer>> {
     const response = await this.request.get(`/samples/darrow-code-${sample}-sample.pdf`);
 
